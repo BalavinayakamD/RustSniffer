@@ -1,19 +1,28 @@
-use pnet::packet::ipv4::Ipv4Packet;
-use pnet::packet::ip::IpNextHeaderProtocols;
 use pnet::packet::Packet;
+use pnet::packet::ip::IpNextHeaderProtocols;
+use pnet::packet::ipv4::Ipv4Packet;
 
-use crate::protocols::{tcp, udp};
+use crate::{
+    packet::ParsedPacket,
+    protocols::{tcp, udp},
+};
 
-pub fn handle_ipv4(packet: &[u8]) {
+pub fn handle_ipv4(packet: &[u8], parsed: &mut ParsedPacket) {
     if let Some(ip) = Ipv4Packet::new(packet) {
+        parsed.src_ip = Some(ip.get_source().to_string());
+        parsed.dst_ip = Some(ip.get_destination().to_string());
+
         match ip.get_next_level_protocol() {
             IpNextHeaderProtocols::Tcp => {
-                tcp::handle_tcp(ip.payload(), &ip);
+                tcp::handle_tcp(ip.payload(), parsed);
             }
             IpNextHeaderProtocols::Udp => {
-                udp::handle_udp(ip.payload(), &ip);
+                udp::handle_udp(ip.payload(), parsed);
             }
-            _ => {}
+            _ => {
+                parsed.protocol = Some("Other".to_string());
+                parsed.payload = ip.payload().to_vec();
+            }
         }
     }
 }

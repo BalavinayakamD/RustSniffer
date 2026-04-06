@@ -1,7 +1,7 @@
 mod args;
 mod capture;
 // mod handlers;
-// mod packet;
+mod packet;
 mod protocols;
 
 fn main() {

@@ -13,4 +13,3 @@ pub struct ParsedPacket {
 
     pub payload: Vec<u8>,
 }
-
