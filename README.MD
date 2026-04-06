@@ -11,5 +11,6 @@ Integrate this with an AI to analyze the packets and block malicious activity.
 # how to run
 
 ```bash
-sudo cargo run
+sudo cargo run <Interface>
 ```
+note : the <Interface> is the interface where you want to capture the traffic
