@@ -15,8 +15,7 @@ pub fn handle_ethernet(packet: &[u8]) -> Option<ParsedPacket> {
                 ipv4::handle_ipv4(eth_packets.payload() , &mut parsed);
             }
             EtherTypes::Ipv6 => {
-                // println!("IPv6 packet detected");
-                ipv6::handle_ipv6(eth_packets.payload());
+                ipv6::handle_ipv6(eth_packets.payload(), &mut parsed);
             }
             _ => {}
         }
